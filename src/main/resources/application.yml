@@ -13,3 +13,7 @@ spring:
 kakao:
   restapi:
     key: KakaoAK ${api.kakao}
+  api:
+    baseurl: https://dapi.kakao.com
+    path:
+      book: /v3/search/book

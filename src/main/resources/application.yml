@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: kakaobook-api-demo
+  config:
+    import:
+      - "aws-parameterstore:/my-pocket/prod/db"
+      - "aws-parameterstore:/my-pocket/prod/api"
+  datasource:
+    url: jdbc:mysql://${db.host}:3306/${db.name}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: ${db.username}
+    password: ${db.password}
+
+kakao:
+  restapi:
+    key: KakaoAK ${api.kakao}

@@ -1,4 +1,9 @@
 #!/bin/bash
+LOG_PATH="/home/ec2-user/app"
+# 로그 파일을 미리 생성하고, 모든 사용자가 읽고 쓸 수 있도록 권한(666) 부여
+touch $LOG_PATH/deploy.log $LOG_PATH/deploy_err.log
+chmod 666 $LOG_PATH/deploy.log $LOG_PATH/deploy_err.log
+
 # 1. 변수 설정
 # appspec.yml에서 복사한 jar 파일이 위치한 경로입니다.
 # JAR 파일이 하나만 있다고 가정합니다.

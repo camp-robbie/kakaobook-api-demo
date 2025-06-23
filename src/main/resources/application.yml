@@ -10,7 +10,7 @@ spring:
 
 kakao:
   restapi:
-    key: ${kakao.restapi.key}
+    key:
   api:
     baseurl: https://dapi.kakao.com
     path:

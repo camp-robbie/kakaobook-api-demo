@@ -3,8 +3,8 @@ package com.camp.kakaobookapidemo.config;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "kakao")
 @Data
+@ConfigurationProperties(prefix = "kakao")
 public class KakaoProperties {
     private Restapi restapi;
     private Api api;

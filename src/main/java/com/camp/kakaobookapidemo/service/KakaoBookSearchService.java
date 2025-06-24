@@ -22,12 +22,6 @@ public class KakaoBookSearchService {
                         .build())
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "클라이언트 오류 발생: " + response.getStatusCode());
-                })
-                .onStatus(HttpStatusCode::is5xxServerError, (request, response) -> {
-                    throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류 발생: " + response.getStatusCode());
-                })
                 .body(KakaoBookResponse.class);
     }
 }

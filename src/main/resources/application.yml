@@ -1,8 +1,8 @@
 spring:
-  application:
-    name: my-pocket
   config:
     import: aws-parameterstore:/config/
+  application:
+    name: my-pocket
   datasource:
     url: jdbc:mysql://${db.host}:3306/${db.name}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: ${db.username}

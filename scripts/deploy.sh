@@ -1,47 +1,45 @@
 #!/bin/bash
+
 LOG_PATH="/home/ec2-user/app"
-# 로그 파일을 미리 생성하고, 모든 사용자가 읽고 쓸 수 있도록 권한(666) 부여
+mkdir -p $LOG_PATH
 touch $LOG_PATH/deploy.log $LOG_PATH/deploy_err.log
 chmod 666 $LOG_PATH/deploy.log $LOG_PATH/deploy_err.log
 
-# 1. 변수 설정
-# appspec.yml에서 복사한 jar 파일이 위치한 경로입니다.
-# JAR 파일이 하나만 있다고 가정합니다.
-JAR_PATH=$(ls /home/ec2-user/app/build/libs/*.jar | head -n 1)
-JAR_NAME=$(basename $JAR_PATH)
-echo "> 배포할 파일: $JAR_NAME" >> /home/ec2-user/app/deploy.log
+# 1. 새 JAR 파일 탐색
+JAR_PATH=$(find /home/ec2-user/app -name "*.jar" | head -n 1)
+echo "> 새로 배포할 파일: $JAR_PATH" >> $LOG_PATH/deploy.log
 
-# 2. 기존 애플리케이션 종료
-echo "> 현재 실행중인 애플리케이션 pid 확인" >> /home/ec2-user/app/deploy.log
-CURRENT_PID=$(pgrep -f $JAR_NAME)
-
-if [ -z "$CURRENT_PID" ]; then
-    echo "> 현재 구동중인 애플리케이션이 없으므로 종료하지 않습니다." >> /home/ec2-user/app/deploy.log
-else
-    echo "> kill -15 $CURRENT_PID" >> /home/ec2-user/app/deploy.log
-    kill -15 $CURRENT_PID
-    sleep 5
+if [ -z "$JAR_PATH" ]; then
+    echo "> 배포할 새로운 .jar 파일을 찾을 수 없습니다." >> $LOG_PATH/deploy.log
+    exit 1
 fi
 
-# 3. 새 애플리케이션 배포 및 로그 기록
-echo "> 새 애플리케이션 배포" >> /home/ec2-user/app/deploy.log
-nohup java -jar $JAR_PATH >> /home/ec2-user/app/deploy.log 2>/home/ec2-user/app/deploy_err.log &
+# 2. 기존 서비스 종료
+echo "> 기존 my-pocket.service 중지" >> $LOG_PATH/deploy.log
+if systemctl is-active --quiet my-pocket.service; then
+    sudo systemctl stop my-pocket.service
+    sleep 5
+else
+    echo "> my-pocket.service가 실행 중이 아니므로 중지하지 않음" >> $LOG_PATH/deploy.log
+fi
 
-# 4. Health Check - 애플리케이션이 정상적으로 실행되었는지 확인
-echo "> Health check 시작" >> /home/ec2-user/app/deploy.log
+# 3. 새 애플리케이션 실행
+echo "> 새 애플리케이션 실행" >> $LOG_PATH/deploy.log
+nohup java -jar $JAR_PATH >> $LOG_PATH/deploy.log 2>> $LOG_PATH/deploy_err.log &
 
+# 4. Health Check
+echo "> Health check 시작" >> $LOG_PATH/deploy.log
 for RETRY_COUNT in {1..10}
 do
-  echo "> #${RETRY_COUNT} 번째 Health check 시도..." >> /home/ec2-user/app/deploy.log
-  # Actuator health check API를 호출하여 응답 코드가 200인지 확인
+  echo "> #${RETRY_COUNT} 번째 Health check 시도..." >> $LOG_PATH/deploy.log
   RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:8080/actuator/health)
 
   if [ "$RESPONSE_CODE" -eq 200 ]; then
-    echo "> Health check 성공" >> /home/ec2-user/app/deploy.log
-    exit 0 # 성공적으로 스크립트 종료 (CodeDeploy에게 성공 알림)
+    echo "> Health check 성공" >> $LOG_PATH/deploy.log
+    exit 0
   fi
   sleep 5
 done
 
-echo "> Health check 실패" >> /home/ec2-user/app/deploy.log
-exit 1 # 실패 상태로 스크립트 종료 (CodeDeploy에게 실패 알림)
+echo "> Health check 실패" >> $LOG_PATH/deploy.log
+exit 1

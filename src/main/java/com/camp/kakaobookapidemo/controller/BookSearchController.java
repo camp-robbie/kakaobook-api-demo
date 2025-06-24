@@ -16,4 +16,9 @@ public class BookSearchController {
     public KakaoBookResponse search(@RequestParam String query, @RequestParam(defaultValue = "10") int size) {
         return kakaoBookSearchService.searchBooks(query, size);
     }
+
+    @GetMapping("/check")
+    public String check() {
+        return "ok";
+    }
 }

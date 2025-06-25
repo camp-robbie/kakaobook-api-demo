@@ -7,6 +7,9 @@ spring:
     url: jdbc:mysql://${db.host}:3306/${db.name}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: ${db.username}
     password: ${db.password}
+  jpa:
+    hibernate:
+      ddl-auto: update
   mvc:
     log-request-details: true
 

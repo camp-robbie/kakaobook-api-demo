@@ -2,6 +2,7 @@ package com.camp.kakaobookapidemo.controller;
 
 import com.camp.kakaobookapidemo.dto.BookRequest;
 import com.camp.kakaobookapidemo.dto.KakaoBookResponse;
+import com.camp.kakaobookapidemo.entity.BookEntity;
 import com.camp.kakaobookapidemo.service.BookService;
 import com.camp.kakaobookapidemo.service.KakaoBookSearchService;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +21,8 @@ public class BookSearchController {
     }
 
     @PostMapping("/api/books")
-    public ResponseEntity<Void> saveBook(@RequestBody BookRequest request) {
-        bookService.save(request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<BookEntity> saveBook(@RequestBody BookRequest request) {
+        BookEntity bookEntity = bookService.save(request);
+        return ResponseEntity.ok(bookEntity);
     }
 }

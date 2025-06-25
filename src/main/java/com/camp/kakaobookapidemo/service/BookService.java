@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 public class BookService {
     private final BookRepository bookRepository;
 
-    public void save(BookRequest request) {
+    public BookEntity save(BookRequest request) {
         BookEntity bookEntity = new BookEntity(request.getTitle());
-        bookRepository.save(bookEntity);
+        return bookRepository.save(bookEntity);
     }
 }

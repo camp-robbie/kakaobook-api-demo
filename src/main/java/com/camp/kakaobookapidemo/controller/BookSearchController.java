@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class BookSearchController {
@@ -24,5 +26,10 @@ public class BookSearchController {
     public ResponseEntity<BookEntity> saveBook(@RequestBody BookRequest request) {
         BookEntity bookEntity = bookService.save(request);
         return ResponseEntity.ok(bookEntity);
+    }
+
+    @GetMapping("/api/books")
+    public ResponseEntity<List<BookEntity>> getBooks() {
+        return ResponseEntity.ok(bookService.getBooks());
     }
 }

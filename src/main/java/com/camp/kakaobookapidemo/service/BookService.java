@@ -4,7 +4,7 @@ import com.camp.kakaobookapidemo.dto.BookRequest;
 import com.camp.kakaobookapidemo.entity.BookEntity;
 import com.camp.kakaobookapidemo.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +19,7 @@ public class BookService {
         return bookRepository.save(bookEntity);
     }
 
+    @Cacheable(value = "books", key = "#id")
     public List<BookEntity> getBooks() {
         return bookRepository.findAll();
     }

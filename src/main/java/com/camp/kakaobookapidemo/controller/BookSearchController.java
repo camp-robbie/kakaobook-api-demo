@@ -27,9 +27,9 @@ public class BookSearchController {
         BookEntity bookEntity = bookService.save(request);
         return ResponseEntity.ok(bookEntity);
     }
-//
-//    @GetMapping("/api/books")
-//    public ResponseEntity<List<BookEntity>> getBooks() {
-//        return ResponseEntity.ok(bookService.getBooks());
-//    }
+
+    @GetMapping("/api/books")
+    public ResponseEntity<List<BookEntity>> getBooks() {
+        return ResponseEntity.ok(bookService.getBooks());
+    }
 }

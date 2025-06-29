@@ -1,6 +1,12 @@
 spring:
   application:
     name: my-pocket
+#  cloud:
+#    aws:
+#      region:
+#        static: ap-northeast-2
+#  config:
+#    import: ""
   config:
     import: aws-parameterstore:/config/my-pocket/
   datasource:

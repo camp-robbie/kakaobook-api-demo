@@ -19,7 +19,7 @@ public class BookService {
         return bookRepository.save(bookEntity);
     }
 
-    @Cacheable(value = "books", key = "#id")
+    @Cacheable(value = "books")
     public List<BookEntity> getBooks() {
         return bookRepository.findAll();
     }

@@ -40,7 +40,6 @@ kakao:
     path:
       book: /v3/search/book
 
-
 #logging:
 #  level:
 #    org.springframework.web: DEBUG
